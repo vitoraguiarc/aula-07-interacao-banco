@@ -1,7 +1,7 @@
 <?php
     /******************************************************************* 
      * Objetivo: Arquivo para criar a conexão com o BD Mysql
-     * Autor: Marcel    
+     * Autor: Vitor Aguiar    
      * Data: 25/02/2022
      * Versão: 1.0    
     *********************************************************************/
