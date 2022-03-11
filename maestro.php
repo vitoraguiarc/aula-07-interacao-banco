@@ -16,13 +16,19 @@
 
         //Recebendo dados via URL p/ saber quem tá solicitando e qual ação será realizada
         $component =  strtoupper($_GET['component']);
-        $action = $_GET['action'];
+        $action = strtoupper($_GET['action']);
 
         //Estrutura condicional para validar quem esta solicitando algo para o maestro
         switch($component)
         {
             case 'CONTATOS';
-            echo('chamando a controller de contatos');
+            //Importar o arquivo da controller
+            require_once('controller/controller-contatos.php');
+
+            if($action == 'INSERIR')
+                inserirContato($_POST);
+            elseif($action == 'EDITAR')
+                atualizarContato($_POST);
             break;
         }
     }

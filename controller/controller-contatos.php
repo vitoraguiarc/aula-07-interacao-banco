@@ -8,8 +8,31 @@
     *********************************************************************/
 
     //Função para receber dados da view e encaminhar para a model (Inserir)
-    function inserirContato(){
+    function inserirContato($dadosContato){
+        if(!empty($dadosContato)){
+            //Validação de caixa vazia pois esses elementos são obrigatórios no banco de dados
+            if(!empty($dadosContato['txtNome']) && !empty($dadosContato['txtCelular']) && !empty($dadosContato['txtEmail'])){
+                
+                //Criação do array de dados que será encaminhado a model para inserir no BD, é importante criar este array conforme as necessidades de manipulação do BD 
+                //OBS: criar as chave do array conforme os nomes dos atributos do BD
 
+                $arrayDados = array (
+                    "nome"     => $dadosContato['txtNome'],
+                    "telefone" => $dadosContato['txtTelefone'],
+                    "celular"  => $dadosContato['txtCelular'],
+                    "email"    => $dadosContato['txtEmail'],
+                    "obs"      => $dadosContato['txtObs'],
+
+                ); 
+
+                //Require do arquivo da model que faz a conexão direta com o BD
+                require_once('./model/bd/contato.php');
+                //Função que recebe o array e passa ele pro BD
+                insertContato($arrayDados);
+
+            }else
+                echo('dados incompletos');
+        }
     }
 
     //Função para receber dados da view e encaminhar para a model (Atualizar)
