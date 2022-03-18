@@ -28,10 +28,15 @@
                 //Require do arquivo da model que faz a conexão direta com o BD
                 require_once('./model/bd/contato.php');
                 //Função que recebe o array e passa ele pro BD
-                insertContato($arrayDados);
+                if (insertContato($arrayDados))
+                    return true;
+                else
+                    return array ('idErro' => 1, 
+                                  'message' => 'Não foi posivel inserir os dados no Banco de Dados');
 
             }else
-                echo('dados incompletos');
+                return array ('idErro'  => 2,
+                              'message' => 'Existem campos obrigatórios que não foram preenchidos');
         }
     }
 
@@ -47,7 +52,16 @@
 
     //Função para solicitar os dados da model e encaminhar a lista de contatos p/ view (Listar)
     function listarContato(){
-        
+        //import do arquivo que vai buscar os dados no BD
+        require_once('./model/bd/contato.php');
+
+        //chama a função q8e vai buscar os dados no BD
+        $dados = selectAllContatos();
+
+        if (!empty($dados))
+            return $dados;
+        else
+            return false;
     }
 
 
