@@ -46,14 +46,30 @@
     }
 
     //Função para realizar a exclusão de um contato (Excluir)
-    function excluirContato(){
+    function excluirContato($id){
         
+        //Validação para verificar se o id contem um numero valido
+        if($id != 0 && !empty($id) && is_numeric($id)) {
+            
+            //Import do arquivo de contato
+            require_once('./model/bd/contato.php');
+
+            //Chama a função na model e valida se o retorno foi verdadeiro ou falso
+            if(deleteContato($id))
+                return true;
+            else
+                return array('idErro' => 3,
+                             'message' => 'O banco de dados não pode excluir o registro.');
+        
+        } else 
+            return array('idErro' => 4,
+                             'message' => 'Não é possivel excluir um registro sem informar um id válido.');
     }
 
     //Função para solicitar os dados da model e encaminhar a lista de contatos p/ view (Listar)
     function listarContato(){
         //import do arquivo que vai buscar os dados no BD
-        require_once('./model/bd/contato.php');
+        require_once('model/bd/contato.php');
 
         //chama a função q8e vai buscar os dados no BD
         $dados = selectAllContatos();
@@ -62,6 +78,30 @@
             return $dados;
         else
             return false;
+    }
+
+    //Função para buscar um contato atraves do id do registro
+    function buscarContato($id) {
+
+        //validação para verificar se o id contem um numero valido
+        if($id != 0 && !empty($id) && is_numeric($id)) {
+
+            //import do arquivo de contato
+            require_once('model/bd/contato.php');
+
+            //chama a função na model que vai buscar no BD
+            $dados = selectByIdContato($id);
+
+            //valida se existem dados para serem devolvidos
+            if(!empty($dados))
+                return $dados;
+            else
+                return false;
+
+        } else {
+            return array('idErro' => 4,
+                             'message' => 'Não é possivel excluir um registro sem informar um id válido.');
+        }
     }
 
 
