@@ -34,8 +34,7 @@
                     $resposta = inserirContato($_POST);
 
                     //Valida o tipo de dados que a controller retornou
-                    if (is_bool($resposta)) /*Se for booleaan*/ 
-                    {   
+                    if (is_bool($resposta)) /*Se for booleaan*/ {   
 
                         //Verificar se o retorno foi verdadeiro
                         if ($resposta) 
@@ -88,6 +87,30 @@
                    
                    // utilizando o require não havera um novo carregamento, apenas a importação da inde.php
                    require_once('index.php');
+                } elseif ($action == 'EDITAR') {
+
+                    //Recebe o id que foi encaminhado no action do form pela URL
+                    $idContato = $_GET['id'];
+
+                    //Chama a função de editar na controller
+                    $resposta = atualizarContato($_POST, $idContato);
+
+                    //Valida o tipo de dados que a controller retornou
+                    if (is_bool($resposta)) /*Se for booleaan*/ {   
+
+                        //Verificar se o retorno foi verdadeiro
+                        if ($resposta) 
+                            echo("<script>
+                                    alert('Registro modificado com sucesso!!');
+                                    window.location.href = 'index.php';
+                                </script>");
+                    
+                    }   //Se o retorno for um array significa houve erro no processo de inserção
+                        elseif (is_array($resposta))
+                            echo("<script>
+                                    alert('".$resposta['message']."');
+                                    window.history.back();
+                                </script>");
                 }
                     
                 

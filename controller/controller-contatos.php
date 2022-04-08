@@ -41,9 +41,44 @@
     }
 
     //Função para receber dados da view e encaminhar para a model (Atualizar)
-    function atualizarContato(){
-        
+    function atualizarContato($dadosContato, $id){
+        if(!empty($dadosContato)){
+            //Validação de caixa vazia pois esses elementos são obrigatórios no banco de dados
+            if(!empty($dadosContato['txtNome']) && !empty($dadosContato['txtCelular']) && !empty($dadosContato['txtEmail']) ){
+                
+                //validação para garantir que o id seja valido
+                if(!empty($id) && $id != 0 && is_numeric($id)) {
+
+                    //Criação do array de dados que será encaminhado a model para inserir no BD, é importante criar este array conforme as necessidades de manipulação do BD 
+                    //OBS: criar as chave do array conforme os nomes dos atributos do BD
+                    $arrayDados = array (
+                        "id"       => $id,
+                        "nome"     => $dadosContato['txtNome'],
+                        "telefone" => $dadosContato['txtTelefone'],
+                        "celular"  => $dadosContato['txtCelular'],
+                        "email"    => $dadosContato['txtEmail'],
+                        "obs"      => $dadosContato['txtObs'],
+
+                    ); 
+
+                    //Require do arquivo da model que faz a conexão direta com o BD
+                    require_once('./model/bd/contato.php');
+                    //Função que recebe o array e passa ele pro BD
+                    if (updateContato($arrayDados))
+                        return true;
+                    else
+                        return array ('idErro' => 1, 
+                                      'message' => 'Não foi posivel atualizar os dados no Banco de Dados');
+                } else
+                    return array ('idErro'  => 4,
+                                  'message' => 'Não é possivel editar um registro sem um ID válido ');
+
+            } else
+                return array ('idErro'  => 2,
+                              'message' => 'Existem campos obrigatórios que não foram preenchidos');
+        }
     }
+    
 
     //Função para realizar a exclusão de um contato (Excluir)
     function excluirContato($id){
