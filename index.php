@@ -45,7 +45,8 @@
                 
             </div>
             <div id="cadastroInformacoes">
-                <form  action="<?=$form?>" name="frmCadastro" method="post" >
+                 <form  action="<?=$form?>" name="frmCadastro" method="post" enctype="multipart/form-data"> 
+                 <!-- /*sem o enctype não é possivel enviar arquivos do form em html para o servidor  */ -->
                     <div class="campos">
                         <div class="cadastroInformacoesPessoais">
                             <label> Nome: </label>
@@ -84,12 +85,21 @@
                     </div>
                     <div class="campos">
                         <div class="cadastroInformacoesPessoais">
+                            <label> Escolha um arquivo: </label>
+                        </div>
+                        <div class="cadastroEntradaDeDados">
+                            <input type="file" name="fleFoto" accept=".jpg, .png, .jpeg, .gif" >
+                        </div>
+                    </div>
+                    <div class="campos">
+                        <div class="cadastroInformacoesPessoais">
                             <label> Observações: </label>
                         </div>
                         <div class="cadastroEntradaDeDados">
                             <textarea name="txtObs" cols="50" rows="7"><?=isset($obs)?$obs:null?></textarea>
                         </div>
                     </div>
+                    
                     <div class="enviar">
                         <div class="enviar">
                             <input type="submit" name="btnEnviar" value="Salvar">
