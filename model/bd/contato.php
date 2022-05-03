@@ -24,13 +24,15 @@ function insertContato($dadosContato) {
                  telefone,
                  celular,
                  email,
-                 obs)
+                 obs,
+                 foto)
             values
                 ('".$dadosContato['nome']."',
                 '".$dadosContato['telefone']."',
                 '".$dadosContato['celular']."',
                 '".$dadosContato['email']."',
-                '".$dadosContato['obs']."'); ";
+                '".$dadosContato['obs']."',
+                '".$dadosContato['foto']."'); ";
     
         
     //Executa o scriipt no BD
@@ -64,7 +66,8 @@ function updateContato($dadosContato) {
                  telefone = '".$dadosContato['telefone']."',
                  celular  = '".$dadosContato['celular']."',
                  email    = '".$dadosContato['email']."',
-                 obs      = '".$dadosContato['obs']."' 
+                 obs      = '".$dadosContato['obs']."',
+                 foto     = '".$dadosContato['foto']."'
             
             where idcontato =".$dadosContato['id'];
 
@@ -134,7 +137,9 @@ function selectAllContatos() {
                 "telefone"   => $rsDados['telefone'],
                 "celular"    => $rsDados['celular'],
                 "email"      => $rsDados['email'],
-                "obs"        => $rsDados['obs']
+                "obs"        => $rsDados['obs'],
+                "foto"       => $rsDados['foto']
+
             );
             $cont++;
         }
@@ -142,7 +147,12 @@ function selectAllContatos() {
         //Solicita o fechamento da conexão com o BD
         fecharConexaoMysql($conexao);
 
-        return $arrayDados;
+        if (isset($arrayDados)) {
+            return $arrayDados;
+        } else
+            return false;
+
+        
     }
 }
 
@@ -171,7 +181,8 @@ function selectByIdContato($id) {
                 "telefone"   => $rsDados['telefone'],
                 "celular"    => $rsDados['celular'],
                 "email"      => $rsDados['email'],
-                "obs"        => $rsDados['obs']
+                "obs"        => $rsDados['obs'],
+                "foto"       => $rsDados['foto']
             );
             
         }

@@ -1,7 +1,12 @@
 <?php
+    //import do arquivo de configurações do projeto
+    require_once('./modulo/config.php');
 
     //variavel que tem como finalidade diferenciar no action do form qual será a action encaminhada para a router (inserir ou editar)
     $form = (string) "maestro.php?component=contatos&action=inserir";
+
+    //variavel para carregar o nome da foto do banco de dados
+    $foto = (string) null;
 
     //Valida se a utilização de variaveis de sessão esta ativa no servidor
     if(session_status()) {
@@ -15,9 +20,11 @@
             $celular  = $_SESSION['dadosContato']['celular'];
             $email    = $_SESSION['dadosContato']['email'];
             $obs      = $_SESSION['dadosContato']['obs'];
+            $foto      = $_SESSION['dadosContato']['foto'];
+            
 
             //Mudando o action para editar
-            $form = "maestro.php?component=contatos&action=editar&id=".$id;
+            $form = "maestro.php?component=contatos&action=editar&id=".$id."&foto=".$foto;
 
             //Destroi uma variavel da memoria do servidor
             unset($_SESSION['dadosContato']);
@@ -99,6 +106,9 @@
                             <textarea name="txtObs" cols="50" rows="7"><?=isset($obs)?$obs:null?></textarea>
                         </div>
                     </div>
+                    <div class="campos">
+                        <img src="<?=DIRETORIO_FILE_UPLOAD.$foto?>" alt="">
+                    </div>
                     
                     <div class="enviar">
                         <div class="enviar">
@@ -119,19 +129,25 @@
                     <td class="tblColunas destaque"> Nome </td>
                     <td class="tblColunas destaque"> Celular </td>
                     <td class="tblColunas destaque"> Email </td>
+                    <td class="tblColunas destaque"> Foto </td>
                     <td class="tblColunas destaque"> Opções </td>
                 </tr>
                 
                <?php
                     require_once('./controller/controller-contatos.php');
                     $listContatos = listarContato();
-                    foreach ($listContatos as $item)
-                    {
+
+                    if($listContatos) {
+                    
+                        foreach ($listContatos as $item)
+                        {
+                            $foto = $item['foto'];
                ?>
                     <tr id="tblLinhas">
                         <td class="tblColunas registros"><?=$item['nome']?></td>
                         <td class="tblColunas registros"><?=$item['celular']?></td>
                         <td class="tblColunas registros"><?=$item['email']?></td>
+                        <td class="tblColunas registros"><img src="<?=DIRETORIO_FILE_UPLOAD.$foto?>" class="foto"></td>
                     
                         <td class="tblColunas registros">
 
@@ -139,7 +155,7 @@
                                     <img src="img/edit.png" alt="Editar" title="Editar" class="editar">
                                 </a>
                                 
-                                <a onclick="return confirm('Deseja realmente excluir o contato <?=$item['nome']?>?')" href="maestro.php?component=contatos&action=deletar&id=<?=$item['id']?>">
+                                <a onclick="return confirm('Deseja realmente excluir o contato <?=$item['nome']?>?')" href="maestro.php?component=contatos&action=deletar&id=<?=$item['id']?>&foto=<?=$foto?>">
                                     <img src="img/trash.png" alt="Excluir" title="Excluir" class="excluir" >
                                 </a>
 
@@ -148,6 +164,7 @@
                     </tr>
                 <?php
                     }
+                }
                 ?>
             </table>
         </div>
