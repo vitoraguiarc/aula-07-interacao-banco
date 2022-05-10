@@ -8,6 +8,9 @@
     //variavel para carregar o nome da foto do banco de dados
     $foto = (string) null;
 
+    //variavel para ser utilizada no carregar dos estados (opção de editar)
+    $idestado = (string) null;
+
     //Valida se a utilização de variaveis de sessão esta ativa no servidor
     if(session_status()) {
 
@@ -21,6 +24,7 @@
             $email    = $_SESSION['dadosContato']['email'];
             $obs      = $_SESSION['dadosContato']['obs'];
             $foto      = $_SESSION['dadosContato']['foto'];
+            $idestado = $_SESSION['dadosContato']['idestado'];
             
 
             //Mudando o action para editar
@@ -61,6 +65,31 @@
                         <div class="cadastroEntradaDeDados">
                             <input type="text" name="txtNome" value="<?=isset($nome)?$nome:null?>" placeholder="Digite seu Nome" maxlength="100">
                             <!-- isset($nome)?$nome:null - if ternario  -->
+                        </div>
+                    </div>
+
+                    <div class="campos">
+                        <div class="cadastroInformacoesPessoais">
+                            <label> Estado: </label>
+                        </div>
+                        <div class="cadastroEntradaDeDados">
+                            <select name="sltEstado" id="">
+                                <option value="">Selecione um item</option>
+                                <?php
+                                    //import da controller de estados
+                                     require_once('controller/controller-estados.php');
+                                     //chama a função para carregar todos os estados no banco
+                                     $listEstados = listarEstado();
+                   
+                                         foreach ($listEstados as $item) {
+
+                                             ?>
+                                                <option <?=$idestado==$item['idestado']?'selected':null ?> value="<?=$item['idestado']?>"><?=$item['sigla']?></option>
+                                             <?php
+                                         }
+                                
+                                ?>
+                            </select>
                         </div>
                     </div>
                                      

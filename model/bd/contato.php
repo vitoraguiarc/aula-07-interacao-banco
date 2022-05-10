@@ -25,14 +25,16 @@ function insertContato($dadosContato) {
                  celular,
                  email,
                  obs,
-                 foto)
+                 foto,
+                 idestado)
             values
                 ('".$dadosContato['nome']."',
                 '".$dadosContato['telefone']."',
                 '".$dadosContato['celular']."',
                 '".$dadosContato['email']."',
                 '".$dadosContato['obs']."',
-                '".$dadosContato['foto']."'); ";
+                '".$dadosContato['foto']."',
+                '".$dadosContato['idestado']."'); ";
     
         
     //Executa o scriipt no BD
@@ -67,7 +69,8 @@ function updateContato($dadosContato) {
                  celular  = '".$dadosContato['celular']."',
                  email    = '".$dadosContato['email']."',
                  obs      = '".$dadosContato['obs']."',
-                 foto     = '".$dadosContato['foto']."'
+                 foto     = '".$dadosContato['foto']."',
+                 idestado = '".$dadosContato['idestado']."'
             
             where idcontato =".$dadosContato['id'];
 
@@ -138,8 +141,9 @@ function selectAllContatos() {
                 "celular"    => $rsDados['celular'],
                 "email"      => $rsDados['email'],
                 "obs"        => $rsDados['obs'],
-                "foto"       => $rsDados['foto']
-
+                "foto"       => $rsDados['foto'],
+                "idestado"   => $rsDados['idestado']
+ 
             );
             $cont++;
         }
@@ -182,7 +186,9 @@ function selectByIdContato($id) {
                 "celular"    => $rsDados['celular'],
                 "email"      => $rsDados['email'],
                 "obs"        => $rsDados['obs'],
-                "foto"       => $rsDados['foto']
+                "foto"       => $rsDados['foto'],
+                "idestado"   => $rsDados['idestado']
+
             );
             
         }

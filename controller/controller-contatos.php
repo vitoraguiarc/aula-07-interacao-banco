@@ -7,6 +7,9 @@
      * Versão: 1.0    
     *********************************************************************/
 
+    //import do arquivo configuração do projeto
+    require_once('modulo/config.php');
+
     //Função para receber dados da view e encaminhar para a model (Inserir)
     function inserirContato($dadosContato, $file){
 
@@ -14,7 +17,7 @@
 
         if(!empty($dadosContato)){
             //Validação de caixa vazia pois esses elementos são obrigatórios no banco de dados
-            if(!empty($dadosContato['txtNome']) && !empty($dadosContato['txtCelular']) && !empty($dadosContato['txtEmail'])){
+            if(!empty($dadosContato['txtNome']) && !empty($dadosContato['txtCelular']) && !empty($dadosContato['txtEmail']) && !empty($dadosContato['sltEstado'])){
                 
                 
                 
@@ -42,7 +45,8 @@
                     "celular"  => $dadosContato['txtCelular'],
                     "email"    => $dadosContato['txtEmail'],
                     "obs"      => $dadosContato['txtObs'],
-                    "foto"     => $nomeFoto
+                    "foto"     => $nomeFoto,
+                    "idestado" => $dadosContato['sltEstado']
 
                 ); 
 
@@ -63,6 +67,8 @@
 
     //Função para receber dados da view e encaminhar para a model (Atualizar)
     function atualizarContato($dadosContato, $arrayDados){
+
+        $statusUpload = (boolean) false;
 
         //Recebe o id enviado pelo arrayDados
         $id = $arrayDados['id'];
@@ -88,10 +94,11 @@
                         
                         //chama a função de upload para enviar para o servidor
                         $novaFoto = uploadFile($file['fleFoto']);
-
+                
                     } else {
                         //permanece a mesma foto no banco
                         $novaFoto = $foto;
+                        $statusUpload = true;
                     }
 
                     //Criação do array de dados que será encaminhado a model para inserir no BD, é importante criar este array conforme as necessidades de manipulação do BD 
@@ -103,7 +110,8 @@
                         "celular"  => $dadosContato['txtCelular'],
                         "email"    => $dadosContato['txtEmail'],
                         "obs"      => $dadosContato['txtObs'],
-                        "foto"     => $novaFoto
+                        "foto"     => $novaFoto,
+                        "idestado" => $dadosContato['sltEstado']
 
                     ); 
 
@@ -111,7 +119,12 @@
                     require_once('./model/bd/contato.php');
                     //Função que recebe o array e passa ele pro BD
                     if (updateContato($arrayDados)) {
-                        unlink(DIRETORIO_FILE_UPLOAD.$foto);
+                        //validação para verificar se será necessario apagar a foto antiga
+                        if($statusUpload) {
+                            //apaga a foto antiga do servidor
+                            unlink(DIRETORIO_FILE_UPLOAD.$foto);
+                        }
+                        
                         return true;
                     }else
                         return array ('idErro' => 1, 
