@@ -8,7 +8,7 @@
 *********************************************************************/
 
 //import da conexão
-require_once('conexao-my-sql.php');
+require_once('ConexaoMySql.php');
 
 //Função para listar todos os estados no BD
 function selectAllEstados() {

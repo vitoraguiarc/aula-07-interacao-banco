@@ -25,7 +25,7 @@
             case 'CONTATOS';
 
                 //Importar o arquivo da controller
-                require_once('controller/controller-contatos.php');
+                require_once('controller/controllerContatos.php');
 
                 //Validação para qual ação será realizada
                 if($action == 'INSERIR') {

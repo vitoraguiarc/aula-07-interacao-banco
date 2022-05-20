@@ -11,5 +11,26 @@
     const EXT_FILE_UPLOAD = array("image/jpg", "image/jpeg", "image/gif", "image/png");
     const DIRETORIO_FILE_UPLOAD = "arquivos/";
 
+    define('SRC', $_SERVER['DOCUMENT_ROOT'].'/vitor/aula07/');
+
+    #FUNÇÕES GLOBAIS PARA O PROJETO
+
+    //Função para converter um array em JSON
+    function createJSON($arrayDados) {
+
+        //Verificação se o array possui dados
+        if(!empty($arrayDados)) {
+            //Configura o padrão da conversão para JSON
+            header('Content-Type: application/json');
+            $dadosJSON = json_encode($arrayDados);
+
+            // json_encode() - array for json
+            // json_decode - json for array
+
+            return $dadosJSON;
+        } else
+            return false;
+        
+    }
 
 ?>

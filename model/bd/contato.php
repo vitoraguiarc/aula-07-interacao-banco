@@ -7,7 +7,7 @@
      * Versão: 1.0    
 *********************************************************************/
 //Import do arquivo que estabelece a conexão com o BD
-require_once('conexao-my-sql.php');
+require_once('conexaoMySql.php');
 
 //Função para realizar o insert no BD
 function insertContato($dadosContato) {

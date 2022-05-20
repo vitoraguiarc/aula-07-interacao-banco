@@ -8,7 +8,9 @@
     *********************************************************************/
 
     //import do arquivo configuração do projeto
-    require_once('modulo/config.php');
+    require_once(SRC.'modulo/config.php');
+
+    
 
     //Função para receber dados da view e encaminhar para a model (Inserir)
     function inserirContato($dadosContato, $file){
@@ -188,7 +190,7 @@
     //Função para solicitar os dados da model e encaminhar a lista de contatos p/ view (Listar)
     function listarContato(){
         //import do arquivo que vai buscar os dados no BD
-        require_once('model/bd/contato.php');
+        require_once(SRC.'model/bd/contato.php');
 
         //chama a função q8e vai buscar os dados no BD
         $dados = selectAllContatos();
@@ -206,7 +208,7 @@
         if($id != 0 && !empty($id) && is_numeric($id)) {
 
             //import do arquivo de contato
-            require_once('model/bd/contato.php');
+            require_once(SRC.'model/bd/contato.php');
 
             //chama a função na model que vai buscar no BD
             $dados = selectByIdContato($id);

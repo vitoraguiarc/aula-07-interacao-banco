@@ -77,7 +77,7 @@
                                 <option value="">Selecione um item</option>
                                 <?php
                                     //import da controller de estados
-                                     require_once('controller/controller-estados.php');
+                                     require_once('controller/controllerEstados.php');
                                      //chama a função para carregar todos os estados no banco
                                      $listEstados = listarEstado();
                    
@@ -163,7 +163,7 @@
                 </tr>
                 
                <?php
-                    require_once('./controller/controller-contatos.php');
+                    require_once('./controller/controllerContatos.php');
                     $listContatos = listarContato();
 
                     if($listContatos) {
@@ -177,6 +177,7 @@
                         <td class="tblColunas registros"><?=$item['celular']?></td>
                         <td class="tblColunas registros"><?=$item['email']?></td>
                         <td class="tblColunas registros"><img src="<?=DIRETORIO_FILE_UPLOAD.$foto?>" class="foto"></td>
+                        
                     
                         <td class="tblColunas registros">
 
@@ -193,6 +194,8 @@
                     </tr>
                 <?php
                     }
+                    
+                    
                 }
                 ?>
             </table>
