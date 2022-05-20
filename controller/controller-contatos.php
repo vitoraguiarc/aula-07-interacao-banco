@@ -33,7 +33,10 @@
                         
                         return $nomeFoto;
                     }
+
                 }
+
+               
                 
                 
                 //Criação do array de dados que será encaminhado a model para inserir no BD, é importante criar este array conforme as necessidades de manipulação do BD 

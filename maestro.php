@@ -56,6 +56,7 @@
                                 </script>");
                                 
                 } elseif ($action == 'DELETAR') {
+
                     //Recebe o id do registro que devera ser excluído, este foi enviado pela url no link da imagem do excluir que foi acionado na index
                     $idContato = $_GET['id']; 
                     $foto = $_GET['foto'];
