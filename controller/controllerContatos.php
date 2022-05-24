@@ -158,10 +158,10 @@
         if($id != 0 && !empty($id) && is_numeric($id)) {
             
             //Import do arquivo de contato
-            require_once('./model/bd/contato.php');
+            require_once(SRC.'model/bd/contato.php');
 
             //import da constante
-            require_once('./modulo/config.php');
+            // require_once('./modulo/config.php');
 
             //Chama a função na model e valida se o retorno foi verdadeiro ou falso
             if(deleteContato($id)) {
@@ -169,7 +169,7 @@
                 //permite apagar a foto fisicamente do servidor
 
                 if($foto != null) {
-                    if(unlink(DIRETORIO_FILE_UPLOAD.$foto))
+                    if(@unlink(SRC.DIRETORIO_FILE_UPLOAD.$foto))
                     return true;
                 else
                     return array ('idErro'   => 5, 
