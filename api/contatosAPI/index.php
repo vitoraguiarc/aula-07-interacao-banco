@@ -80,7 +80,69 @@
 
     //EndPoint: Requisição para inserir um novo contato
     $app->post('/contatos', function($request, $response, $args) {
+        
+        //Recebe do header da requisição qual será o content-type
+        $contentTypeHeader = $request->getHeaderLine('Content-Type');
+        
+        //cria um array pois dependendo do content type temos mais informações separadas pelo ;
+        $contentType = explode(";", $contentTypeHeader);
+        
+        switch ($contentType[0]) {
+            case 'multipart/form-data':
+                //recebe os dados comuns enviado pelo corpo da requisição
+                $dadosBody = $request->getParsedBody();
 
+                //recebe uma imagem enviada pelo corpo da requisição
+                $uploadFile = $request->getUploadedFiles();
+
+                //cria um array c todos os dados que chegaram pela requisição, devido aos dados serem protegidos, criamos um array e recuperamos os dados pelos metodos do objeto
+                $arrayFoto = array( "name"      => $uploadFile['foto']->getClientFileName(),
+                                    "type"      => $uploadFile['foto']->getClientMediaType(),
+                                    "size"      => $uploadFile['foto']->getSize(),
+                                    "tmp_name"  => $uploadFile['foto']->file
+
+                );
+
+                //cria uma chave chamada foto p colocar todos os dados do objeto, conforme gerado no html
+                $file = array("foto" => $arrayFoto);
+
+                //cria um array com todos os dados comum e do arquivo que sera enviado ao servidor
+                $arrayDados = array(    $dadosBody,
+                                        "file"  => $file
+                        
+                );
+               
+                require_once('../modulo/config.php');
+                require_once('../controller/controllerContatos.php');
+
+                //chama a função da controller para inserir os dados
+                $resposta = inserirContato($arrayDados);
+
+                if(is_bool($resposta) && $resposta == true) {
+                     return $response   ->withStatus(201)
+                                        ->withHeader('Content-Type', 'application/json') 
+                                        ->write('{"message": "Registro inserido com sucesso"}');
+                } elseif(is_array($resposta) && $resposta['idErro']) {
+
+                    $dadosJSON = createJSON($resposta);
+                    return $response    ->withStatus(201)
+                                        ->withHeader('Content-Type', 'application/json') 
+                                        ->write('{"message": "Houve um problema na hora de inserir", 
+                                                "Erro": '.$dadosJSON.'}');
+                }
+                break;
+
+            case 'application/json':
+                $dadosBody = $request->getParsedBody();
+                return $response    ->withStatus(200)
+                                    ->withHeader('Content-Type', 'application/json') 
+                                    ->write('{"message": "Formato json"}');
+                break;
+            default:
+                return $response    ->withStatus(400)
+                                    ->withHeader('Content-Type', 'application/json') 
+                                    ->write('{"message": "Formato errado"}');
+        }
     });
 
     //EndPoint: Requisição para deletar um contato
