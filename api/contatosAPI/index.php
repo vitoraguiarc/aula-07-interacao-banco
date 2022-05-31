@@ -1,5 +1,4 @@
 <?php
-
     /*
      * $request - recebe dados do corpo da requisição (JSON, FORM/DATA, XML, ...)
      * $response - envia dados de retorno da API
@@ -14,7 +13,7 @@
 
     //EndPoint: Requisição para listar todos os contatos
     $app->get('/contatos', function($request, $response, $args) {
-
+        
         require_once('../modulo/config.php');
 
         //import da controller de contatos que fará a busca de dados
@@ -201,6 +200,100 @@
         
 
 
+    });
+
+    
+    //EndPoint: Requisição para editar um contato
+    $app->post('/contatos/{id}', function($request, $response, $args) {
+
+        if(is_numeric($args['id'])) {
+            
+            //Recebe o id do registro que devera ser retornado pela API (este id esta chegando pela variavel criada no endpoint)
+            $id = $args['id'];
+
+            //Recebe do header da requisição qual será o content-type
+            $contentTypeHeader = $request->getHeaderLine('Content-Type');
+            
+            //cria um array pois dependendo do content type temos mais informações separadas pelo ;
+            $contentType = explode(";", $contentTypeHeader);
+            
+            switch ($contentType[0]) {
+                case 'multipart/form-data':
+
+                    require_once('../modulo/config.php');
+                    require_once('../controller/controllerContatos.php');
+
+                    //chama a função para buscar a foto que ja esta salva no bd
+                    if($dadosContato = buscarContato($id)) {
+                        
+                        $fotoAtual = $dadosContato['foto'];
+                    
+                        //recebe os dados comuns enviado pelo corpo da requisição
+                        $dadosBody = $request->getParsedBody();
+
+                        //recebe uma imagem enviada pelo corpo da requisição
+                        $uploadFile = $request->getUploadedFiles();
+
+                        //cria um array c todos os dados que chegaram pela requisição, devido aos dados serem protegidos, criamos um array e recuperamos os dados pelos metodos do objeto
+                        $arrayFoto = array( "name"      => $uploadFile['foto']->getClientFileName(),
+                                            "type"      => $uploadFile['foto']->getClientMediaType(),
+                                            "size"      => $uploadFile['foto']->getSize(),
+                                            "tmp_name"  => $uploadFile['foto']->file
+
+                        );
+
+                        //cria uma chave chamada foto p colocar todos os dados do objeto, conforme gerado no html
+                        $file = array("foto" => $arrayFoto);
+
+                        //cria um array com todos os dados comum e do arquivo que sera enviado ao servidor
+                        $arrayDados = array(    $dadosBody,
+                                                "file"  => $file,
+                                                "id"    => $id,
+                                                "foto"  =>$fotoAtual,
+                                                $_POST
+                                
+                        );
+                    
+                        
+
+                        //chama a função da controller para inserir os dados
+                        $resposta = atualizarContato($arrayDados);
+
+                        if(is_bool($resposta) && $resposta == true) {
+                            return $response   ->withStatus(201)
+                                                ->withHeader('Content-Type', 'application/json') 
+                                                ->write('{"message": "Registro modificado com sucesso"}');
+                        } elseif(is_array($resposta) && $resposta['idErro']) {
+
+                            $dadosJSON = createJSON($resposta);
+                            return $response    ->withStatus(201)
+                                                ->withHeader('Content-Type', 'application/json') 
+                                                ->write('{"message": "Houve um problema na hora de inserir", 
+                                                        "Erro": '.$dadosJSON.'}');
+                        }
+                    } else {
+                        return $response    ->withStatus(404)
+                                            ->withHeader('Content-Type', 'application/json')   
+                                            ->write('{"message": "O ID informado não existe na base dados"}');
+                    }    
+                    break;
+
+                case 'application/json':
+                    $dadosBody = $request->getParsedBody();
+                    return $response    ->withStatus(200)
+                                        ->withHeader('Content-Type', 'application/json') 
+                                        ->write('{"message": "Formato json"}');
+                    break;
+                default:
+                    return $response    ->withStatus(400)
+                                        ->withHeader('Content-Type', 'application/json') 
+                                        ->write('{"message": "Formato errado"}');
+            }
+        } else {
+            return $response    ->withStatus(404)
+                                ->withHeader('Content-Type', 'application/json')   
+                                ->write('{"message": "É obrigatorio informar um id em formato valido (número)"}');
+        }
     });
 
 

@@ -111,6 +111,8 @@
                    require_once('index.php');
                 } elseif ($action == 'EDITAR') {
 
+            
+
                     //Recebe o id que foi encaminhado no action do form pela URL
                     $idContato = $_GET['id'];
 

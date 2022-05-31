@@ -74,34 +74,34 @@
     }
 
     //Função para receber dados da view e encaminhar para a model (Atualizar)
-    function atualizarContato($dadosContato, $arrayDados){
+    function atualizarContato($dadosContato){
 
         $statusUpload = (boolean) false;
 
         //Recebe o id enviado pelo arrayDados
-        $id = $arrayDados['id'];
+        $id = $dadosContato['id'];
 
         //Recebe a foto enviada pelo arrayDados (nome da foto ja existente no BD)
-        $foto = $arrayDados['foto'];
+        $foto = $dadosContato['foto'];
 
         //Recebe o objeto de array referente a nova foto que poderá ser enviada ao servidor
-        $file = $arrayDados['file'];
+        $file = $dadosContato['file'];
 
         if(!empty($dadosContato)){
             //Validação de caixa vazia pois esses elementos são obrigatórios no banco de dados
-            if(!empty($dadosContato['txtNome']) && !empty($dadosContato['txtCelular']) && !empty($dadosContato['txtEmail']) ){
+            if(!empty($dadosContato[0]['nome']) && !empty($dadosContato[0]['celular']) && !empty($dadosContato[0]['email']) ){
                 
                 //validação para garantir que o id seja valido
                 if(!empty($id) && $id != 0 && is_numeric($id)) {
 
                     //validação para identificar se será enviado uma nova foto
-                    if($file['fleFoto']['name'] != null) {
+                    if($file['foto']['name'] != null) {
 
                         //import da função de upload
-                        require_once('modulo/upload.php');
+                        require_once(SRC.'modulo/upload.php');
                         
                         //chama a função de upload para enviar para o servidor
-                        $novaFoto = uploadFile($file['fleFoto']);
+                        $novaFoto = uploadFile($file['foto']);
                 
                     } else {
                         //permanece a mesma foto no banco
@@ -113,24 +113,24 @@
                     //OBS: criar as chave do array conforme os nomes dos atributos do BD
                     $arrayDados = array (
                         "id"       => $id,
-                        "nome"     => $dadosContato['txtNome'],
-                        "telefone" => $dadosContato['txtTelefone'],
-                        "celular"  => $dadosContato['txtCelular'],
-                        "email"    => $dadosContato['txtEmail'],
-                        "obs"      => $dadosContato['txtObs'],
+                        "nome"     => $dadosContato[0]['nome'],
+                        "telefone" => $dadosContato[0]['telefone'],
+                        "celular"  => $dadosContato[0]['celular'],
+                        "email"    => $dadosContato[0]['email'],
+                        "obs"      => $dadosContato[0]['obs'],
                         "foto"     => $novaFoto,
-                        "idestado" => $dadosContato['sltEstado']
+                        "idestado" => $dadosContato[0]['estado']
 
                     ); 
 
                     //Require do arquivo da model que faz a conexão direta com o BD
-                    require_once('./model/bd/contato.php');
+                    require_once(SRC.'model/bd/contato.php');
                     //Função que recebe o array e passa ele pro BD
                     if (updateContato($arrayDados)) {
                         //validação para verificar se será necessario apagar a foto antiga
                         if($statusUpload) {
                             //apaga a foto antiga do servidor
-                            unlink(DIRETORIO_FILE_UPLOAD.$foto);
+                            unlink(SRC.DIRETORIO_FILE_UPLOAD.$foto);
                         }
                         
                         return true;
